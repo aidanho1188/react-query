@@ -17,7 +17,7 @@ function App() {
     return <div>Loading...</div>;
   }
   if (isError) {
-    return <div>Error: (error.message)</div>
+    return <div>Error: {error.message}</div>
   }
   return (
     <>
