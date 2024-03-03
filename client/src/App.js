@@ -10,7 +10,7 @@ function App() {
     const data = await posts.json()
     return data;
   }
-  const{ isLoading, isError, data, error } = useQuery(
+  const { isLoading, isError, data, error } = useQuery(
     'posts', fetchData()
   )
   if (isLoading) {
