@@ -1,12 +1,12 @@
-const mongoose = require('mongoose')
 const {Router} = require('express')
-const router = Router()
 const Posts = require('../../models/Posts')
 
+const router = Router()
+
 // get all posts
-router.get('/', async (req, res) => {
+router.get('/', (req, res) => {
   try {
-    const posts = await Posts.find()
+    const posts = await Posts.find({});
     res.status(200).json(posts)
   } catch (error) {
     console.log(error)
