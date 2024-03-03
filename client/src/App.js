@@ -1,7 +1,7 @@
-import logo from './logo.svg'
-import './App.css'
 import React from 'react'
-import {useQuery} from 'react-query'
+import {QueryClient, QueryClientProvider, useQuery} from 'react-query'
+
+const queryClient = new QueryClient()
 
 function App() {
   async function fetchData() {
@@ -9,7 +9,9 @@ function App() {
     const data = await posts.json()
     return data
   }
-  const {isLoading, isError, data, error} = useQuery('posts', fetchData())
+
+  const {isLoading, isError, data, error} = useQuery('posts', fetchData)
+
   if (isLoading) {
     return <div>Loading...</div>
   }
@@ -17,19 +19,26 @@ function App() {
     return <div>Error: {error.message}</div>
   }
   return (
-    <>
-      <div className="App">
-        <ul>
-          {data.map((post) => {
-            ;<li>
-              <h2>{post.title}</h2>
-              <p>{post.content}</p>
-            </li>
-          })}
-        </ul>
-      </div>
-    </>
+    <div className="App">
+      <ul>
+        {data.map((post) => (
+          <li key={post.id}>
+            <h2>{post.title}</h2>
+            <p>{post.content}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }
 
-export default App
+// need a wrapper for it to work
+function AppWrapper() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
+  )
+}
+
+export default AppWrapper
