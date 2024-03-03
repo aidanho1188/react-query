@@ -1,24 +1,38 @@
 import logo from './logo.svg';
 import './App.css';
+import React from 'react'
+import { useQuery } from 'react-query'
+
 
 function App() {
+  async function fetchData() {
+    const posts = await fetch('https://localhost:8080/api/posts')
+    const data = await posts.json()
+    return data;
+  }
+  const{ isLoading, isError, data, error } = useQuery(
+    'posts', fetchData()
+  )
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  if (isError) {
+    return <div>Error: (error.message)</div>
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <div className="App">
+        <ul>
+          {data.map(post => {
+            <li>
+              <h2>{post.title}</h2>
+              <p>{post.content}</p>
+              </li>
+              })
+          }
+        </ul>
+      </div>
+    </>
   );
 }
 
