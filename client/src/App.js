@@ -1,44 +1,25 @@
-import React from 'react'
-import {QueryClient, QueryClientProvider, useQuery} from 'react-query'
+import * as React from 'react'
+import {QueryClient, QueryClientProvider} from 'react-query'
+import Posts from './Posts/Posts'
+import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 
 const queryClient = new QueryClient()
 
+const router = createBrowserRouter([
+  {
+    path: '/posts',
+    element: <Posts apiUrl={'http://localhost:8080/api/'} />,
+  },
+])
+
 function App() {
-  async function fetchData() {
-    const posts = await fetch('http://localhost:8080/api/posts')
-    const data = await posts.json()
-    return data
-  }
-
-  const {isLoading, isError, data, error} = useQuery('posts', fetchData)
-
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
-  if (isError) {
-    return <div>Error: {error.message}</div>
-  }
-  return (
-    <div className="App">
-      <ul>
-        {data.map((post) => (
-          <li key={post.id}>
-            <h2>{post.title}</h2>
-            <p>{post.content}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
-}
-
-// need a wrapper for it to work
-function AppWrapper() {
   return (
     <QueryClientProvider client={queryClient}>
-      <App />
+      <RouterProvider router={router}>
+        {/* navigation and main content goes here */}
+      </RouterProvider>
     </QueryClientProvider>
   )
 }
 
-export default AppWrapper
+export default App
